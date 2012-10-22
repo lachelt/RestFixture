@@ -802,7 +802,7 @@ public class RestFixture extends Fixture {
         	doMethod(method, resUrl, rBody);
         	completeHttpMethodExecution();
         } catch (RuntimeException e) {
-            if ( ignoreReadTimeout && e.getMessage().contains("Read timed out") ) {
+            if ( ignoreReadTimeout && e.getMessage().contains("Http call failed for IO failure") ) {
                 completeHttpMethodExecutionWithIgnoredTimeout(method);
             } else {
                 getFormatter().exception(row.getCell(0), "Execution of " + method + " caused exception '" + e.getMessage() + "'");
