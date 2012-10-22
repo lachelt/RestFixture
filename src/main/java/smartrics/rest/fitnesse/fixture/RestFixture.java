@@ -651,7 +651,7 @@ public class RestFixture extends Fixture {
                     exprCell.body(getFormatter().gray(exprCell.body()));
                 } catch (RuntimeException e) {
                     getFormatter().exception(exprCell, e.getMessage());
-                    e.printStackTrace();
+                    LOG.error("Exception occurred when processing cell=" + exprCell, e);
                 }
                 GLOBALS.put(label, sValue);
                 adapter.set(sValue);
@@ -795,7 +795,7 @@ public class RestFixture extends Fixture {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void doMethod(String body, String method) {
 		CellWrapper urlCell = row.getCell(1);
-		String url = stripTag(urlCell.text());
+		String url = deHtmlify(stripTag(urlCell.text()));
 		String resUrl = GLOBALS.substitute(url);
         String rBody = GLOBALS.substitute(body);
         try {
@@ -811,7 +811,7 @@ public class RestFixture extends Fixture {
         }
     }
 
-    protected void doMethod(String method, String resUrl, String rBody) {
+	protected void doMethod(String method, String resUrl, String rBody) {
         setLastRequest(partsFactory.buildRestRequest());
 		getLastRequest().setMethod(RestRequest.Method.valueOf(method));
 		getLastRequest().addHeaders(getHeaders());
@@ -1083,4 +1083,8 @@ public class RestFixture extends Fixture {
             debugMethodCallEnd();
         }
     }
+
+    private String deHtmlify(String someHtml) {
+		return Tools.fromHtml(someHtml);
+	}
 }
